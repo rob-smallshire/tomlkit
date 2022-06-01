@@ -268,6 +268,7 @@ class Parser:
                         break
 
                 comment = self.extract()
+                print(f"Comment in [{self._marker}:{self._idx}]")
                 self.mark()
 
                 break
@@ -361,6 +362,7 @@ class Parser:
         Parses a key enclosed in either single or double quotes.
         """
         # Extract the leading whitespace
+        begin_key = self._marker
         original = self.extract()
         quote_style = self._current
         key_type = next((t for t in KeyType if t.value == quote_style), None)
@@ -378,6 +380,10 @@ class Parser:
         while self._current.is_spaces() and self.inc():
             pass
         original += self.extract()
+        end_key = self._idx
+
+        print(f"Quoted key at [{begin_key}:{end_key}]")
+
         key = SingleKey(str(key_str), t=key_type, sep="", original=original)
         if self._current == ".":
             self.inc()
@@ -395,6 +401,7 @@ class Parser:
             pass
 
         original = self.extract()
+        print(f"Key at [{self._marker}:{self._idx}]")
         key = original.strip()
         if not key:
             # Empty key
